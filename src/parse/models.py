@@ -1,13 +1,11 @@
 try:
-    from pydantic import BaseModel, Field, field_validator, ConfigDict
+    from pydantic import BaseModel, Field, field_validator
 except ImportError:
     raise ValueError("[ERROR] Install Pydantic")
 
 from typing import List
 
 class LevelConfig(BaseModel):
-    model_config = ConfigDict(extra='forbid')
-
     level_id: int
     width: int = 20
     height: int = 20
