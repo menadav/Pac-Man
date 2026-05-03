@@ -1,0 +1,4 @@
+pydantic
+pygame
+lint
+flake8
