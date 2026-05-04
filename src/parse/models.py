@@ -59,3 +59,7 @@ class ParseConfig(BaseModel):
                   f"Using default: {security_default}")
             return security_default
         return v
+
+class HighScoreEntry(BaseModel):
+    name: str
+    score: int

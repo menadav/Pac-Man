@@ -7,7 +7,7 @@ def main() -> None:
         if len(sys.argv) != 2:
             raise ValueError("[ERROR] Need only 1 argument")
         data = parse_config(sys.argv[1])
-        game = Game(data)
+        game = GameMannager(data)
         game.run()
     except ValueError as e:
         print(e)

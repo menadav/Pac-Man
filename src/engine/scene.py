@@ -1,3 +1,5 @@
+import pygame
+from typing import Optional, List
 from abc import ABC, abstractmethod
 from src.parse.models import ParseConfig
 
@@ -7,7 +9,7 @@ class BaseScene(ABC):
         self.screen = screen
 
     @abstractmethod
-    def handle_events(self, events):
+    def handle_events(self, events: List[str]) -> Optional[str]:
         pass
 
     @abstractmethod
