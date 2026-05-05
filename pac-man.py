@@ -1,6 +1,6 @@
 import sys
 from src.parse.read_config import parse_config
-from src.engine.loop_game import GameMannager
+from src.engine.dataprocess import GameMannager
 
 def main() -> None:
     try :

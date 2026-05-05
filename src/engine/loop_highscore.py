@@ -40,20 +40,33 @@ class HighScoreScene(BaseScene):
         elif option == "Back to menu":
             return "MENU"
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         screen.fill((0, 0, 0))
-        center_x = screen.get_width() // 2
+        sw, sh = screen.get_size()
+        center_x = sw // 2
         title_surf = self.font.render("PAC-MAN", True, (255, 255, 0))
-        title_surf = pygame.transform.scale_by(title_surf, 2.5)
-        title_rect = title_surf.get_rect(center=(center_x, 120))
-        screen.blit(title_surf, title_rect)
-        menu_start_y = 350
+        t_scale = (sh * 0.10) / title_surf.get_height() 
+        title_surf = pygame.transform.scale_by(title_surf, t_scale)
+        screen.blit(title_surf, title_surf.get_rect(center=(center_x, sh * 0.10)))
+        menu_base_y = sh * 0.25
+        menu_spacing = sh * 0.07 
         for i, option in enumerate(self.option):
             color = (255, 255, 0) if i == self.index else (255, 255, 255)
             surf = self.font.render(option, True, color)
-            screen.blit(surf, surf.get_rect(center=(center_x, menu_start_y + i * 140)))
-        scores_start_y = 650 
-        for j, line in enumerate(self.score_list):
-            surf = self.font.render(line, True, (255, 255, 255))
-            rect = surf.get_rect(center=(center_x, scores_start_y + j * 90))
-            screen.blit(surf, rect)
+            s_scale = (sh * 0.05) / surf.get_height()
+            surf = pygame.transform.scale_by(surf, s_scale)
+            screen.blit(surf, surf.get_rect(center=(center_x, menu_base_y + i * menu_spacing)))
+        if not self.score_list:
+            empty_surf = self.font.render("Cargando puntajes...", True, (100, 100, 100))
+            screen.blit(empty_surf, empty_surf.get_rect(center=(center_x, sh * 0.60)))
+        else:
+            scores_base_y = sh * 0.45
+            scores_spacing = sh * 0.05 
+            for j, line in enumerate(self.score_list):
+                color = (0, 255, 255) if line == "Highscores" else (200, 200, 200)
+                score_surf = self.font.render(line, True, color)
+                score_scale = (sh * 0.04) / score_surf.get_height()
+                score_surf = pygame.transform.scale_by(score_surf, score_scale)
+                rect = score_surf.get_rect(center=(center_x, scores_base_y + j * scores_spacing))
+                if rect.bottom < sh:
+                    screen.blit(score_surf, rect)

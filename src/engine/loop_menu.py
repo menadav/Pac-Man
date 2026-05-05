@@ -9,7 +9,7 @@ class Menu(BaseScene):
         super().__init__(screen)
         self.index = 0
         self.options = ["Start", "Highscores", "Instructions", "Exit"]
-        self.font = pygame.font.Font(None, 127)
+        self.font = pygame.font.Font(None, 100)
 
 
     def handle_events(self, events: List[str]) -> Optional[str]:
@@ -23,18 +23,24 @@ class Menu(BaseScene):
                     return self.select_options()
         return None
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         screen.fill((0, 0, 0))
-        center_x = screen.get_width() // 2
+        sw, sh = screen.get_size()
+        center_x = sw // 2
         title_surf = self.font.render("PAC-MAN", True, (255, 255, 0))
-        title_surf = pygame.transform.scale_by(title_surf, 1.965)
-        title_rect = title_surf.get_rect(center=(center_x, 120))
+        t_scale = (sh * 0.12) / title_surf.get_height() 
+        title_surf = pygame.transform.scale_by(title_surf, t_scale)
+        title_rect = title_surf.get_rect(center=(center_x, sh * 0.15))
         screen.blit(title_surf, title_rect)
-        menu_start_y = 350
+        menu_base_y = sh * 0.40
+        menu_spacing = sh * 0.10
         for i, option in enumerate(self.options):
             color = (255, 255, 0) if i == self.index else (255, 255, 255)
             surf = self.font.render(option, True, color)
-            screen.blit(surf, surf.get_rect(center=(center_x, menu_start_y + i * 140)))
+            if surf.get_height() > sh * 0.08:
+                opt_scale = (sh * 0.08) / surf.get_height()
+                surf = pygame.transform.scale_by(surf, opt_scale)
+            screen.blit(surf, surf.get_rect(center=(center_x, menu_base_y + i * menu_spacing)))
 
     def select_options(self) -> str:
         option = self.options[self.index]

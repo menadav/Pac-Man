@@ -8,16 +8,22 @@ from pathlib import Path
 from typing import Optional, Dict, List
 from src.engine.loop_menu import Menu
 from src.engine.loop_highscore import HighScoreScene
+from src.engine.loop_instructions import Instructions
 from src.parse.models import ParseConfig, HighScoreEntry
+
 
 class GameMannager:
     def __init__(self, data: ParseConfig) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode((2600, 1600))
+        info = pygame.display.Info()
+        screen_width = info.current_w
+        screen_height = info.current_h
+        self.screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
         self.scores = self.load_score("src/highscores/highscores.json")
         self.data = data
         self.menu = Menu(self.screen)
         self.highscore = HighScoreScene(self.screen)
+        self.instructions = Instructions(self.screen)
         self.current_scene = self.menu
         self.running = True
         self.clock = pygame.time.Clock()
@@ -35,7 +41,7 @@ class GameMannager:
                 self.highscore.high_load(self.scores)
                 self.current_scene = self.highscore
             elif scene_signal == "INSTRUCTIONS":
-                pass
+                self.current_scene = self.instructions
             elif scene_signal == "MENU":
                 self.current_scene = self.menu
             elif scene_signal == "QUIT":
