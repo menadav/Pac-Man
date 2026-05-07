@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Optional
+from typing import List, Optional,Tuple
 from src.parse.models import HighScoreEntry
 from src.engine.scene import BaseScene
 
@@ -12,7 +12,10 @@ class Menu(BaseScene):
         self.font = pygame.font.Font(None, 100)
 
 
-    def handle_events(self, events: List[str]) -> Optional[str]:
+    def handle_events(
+            self,
+            events: List[pygame.event.Event]
+            ) -> Optional[Tuple[str, int]]:
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -45,10 +48,10 @@ class Menu(BaseScene):
     def select_options(self) -> str:
         option = self.options[self.index]
         if option == "Start":
-            return "GAME"
+            return ("GAME", 0)
         elif option == "Highscores":
-            return "HIGHSCORES"
+            return ("HIGHSCORES", 0)
         elif option == "Instructions":
-            return "INSTRUCTIONS"
+            return ("INSTRUCTIONS", 0)
         elif option == "Exit":
-            return "QUIT"
+            return ("QUIT", 0)

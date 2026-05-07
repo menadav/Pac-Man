@@ -9,9 +9,9 @@ class BaseScene(ABC):
         self.screen = screen
 
     @abstractmethod
-    def handle_events(self, events: List[str]) -> Optional[str]:
+    def handle_events(self, events: List[pygame.event.Event]) -> Optional[str]:
         pass
 
     @abstractmethod
-    def draw(self, screen):
+    def draw(self, scree: pygame.Surface) -> None:
         pass

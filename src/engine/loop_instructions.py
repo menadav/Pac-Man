@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from src.engine.scene import BaseScene
 
 class Instructions(BaseScene):
@@ -9,8 +9,8 @@ class Instructions(BaseScene):
         self.options = ["Return"]
 
     def handle_events(
-            self, events: List[str]
-            ) -> Optional[str]:
+            self, events: List[pygame.event.Event]
+            ) -> Optional[Tuple[str, int]]:
         for event in events:
              if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -25,9 +25,6 @@ class Instructions(BaseScene):
         t_scale = (sh * 0.12) / title_surf.get_height()
         title_surf = pygame.transform.scale_by(title_surf, t_scale)
         screen.blit(title_surf, title_surf.get_rect(center=(center_x, sh * 0.15)))
-
-        # 2. CUERPO DE TEXTO (Instrucciones)
-        # Definimos las líneas de texto
         instructions_text = [
             "Use ARROW KEYS to move Pac-Man",
             "Eat all the dots to win",
@@ -50,4 +47,4 @@ class Instructions(BaseScene):
     def select_options(self):
         option = self.options[0]
         if option == "Return":
-            return "MENU"
+            return ("MENU", 0)
