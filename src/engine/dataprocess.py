@@ -49,7 +49,7 @@ class GameMannager:
                 elif scene_signal == "MENU":
                     self.current_scene = self.menu
                 elif scene_signal == "END" or scene_signal == "WIN":
-                    self.end.check(scene_signal, score)
+                    self.end.checker(scene_signal, score)
                     self.current_scene = self.end
                 elif scene_signal == "QUIT":
                     self.running = False
