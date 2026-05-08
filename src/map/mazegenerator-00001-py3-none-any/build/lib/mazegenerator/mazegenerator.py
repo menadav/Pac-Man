@@ -48,6 +48,8 @@ class MazeGenerator:
         self._create_empty_maze()
         self._add_42_to_maze()
         self._generate_maze(self._entryx, self._entryy, 0)
+        self._find_short_path()
+
 #    Private functions
 
     def _create_empty_maze(self) -> None:

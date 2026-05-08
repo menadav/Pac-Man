@@ -9,7 +9,7 @@ class Menu(BaseScene):
         super().__init__(screen)
         self.index = 0
         self.options = ["Start", "Highscores", "Instructions", "Exit"]
-        self.font = pygame.font.Font(None, 100)
+        self.font = pygame.font.Font(None, 180)
 
 
     def handle_events(

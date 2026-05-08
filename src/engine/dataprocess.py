@@ -5,12 +5,14 @@ except ImportError:
     raise ValueError("[ERROR] Install Pygame")
 import json
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Optional, List
 from src.engine.loop_menu import Menu
 from src.engine.loop_highscore import HighScoreScene
 from src.engine.loop_instructions import Instructions
 from src.engine.loop_end import GameOver
+from src.engine.loop_game import GameRun
 from src.parse.models import ParseConfig, HighScoreEntry
+
 
 class GameMannager:
     def __init__(self, data: ParseConfig) -> None:
@@ -22,6 +24,7 @@ class GameMannager:
         self.scores = "src/highscores/highscores.json"
         self.data = data
         self.menu = Menu(self.screen)
+        self.game = GameRun(self.screen, self.data)
         self.highscore = HighScoreScene(self.screen)
         self.instructions = Instructions(self.screen)
         self.end = GameOver(self.screen, self.scores)
@@ -40,7 +43,7 @@ class GameMannager:
                 scene_signal = signal[0]
                 score = signal[1]
                 if scene_signal == "GAME":
-                    pass
+                    self.current_scene = self.game
                 elif scene_signal == "HIGHSCORES":
                     self.highscore.high_load(self.load_score(self.scores))
                     self.current_scene = self.highscore
