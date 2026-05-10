@@ -13,8 +13,8 @@
   "levels": [
     {
       "level_id": 1,
-      "width": 28,
-      "height": 31,
+      "width": 40,
+      "height": 40,
       "pacgum": 42,
       "level_max_time": 90
     },

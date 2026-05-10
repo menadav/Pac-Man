@@ -1,18 +1,34 @@
+from typing import List
 from mazegenerator.mazegenerator import MazeGenerator
 from src.parse.models import ParseConfig
-
+from src.entities.items import Items
+from src.entities.player import Player
 
 class EntitiesMannager:
     def __init__(self, data: ParseConfig) -> None:
-        print("DEBUG 1: Entrando en EntitiesMannager")
         self.data = data
         self.level_index = 0
         self.current_level = self.data.levels[self.level_index]
-        print(f"DEBUG 2: Generando laberinto {self.current_level.width}x{self.current_level.height}...")
         self.maze_engine = MazeGenerator(
             size=(self.current_level.width, self.current_level.height),
-            perfect=True # Ponlo en True para asegurar que no se buclee
+            seed=42,
+            perfect=False
         )
-        print("DEBUG 3: ¡Laberinto generado con éxito!")
-        self.matrix = self.maze_engine.maze
+        self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
+        self.matrix = self.items.apply_to_matrix()
+        self.player = Player(self.items.pos_start())
         self.status = "RUNNING"
+
+    def next_level(self) -> None:
+        self.level_index += 1
+        self.current_level = self.data.levels[self.level_index]
+        self.maze_engine = MazeGenerator(
+            size=(self.current_level.width, self.current_level.height),
+            perfect=False
+        )
+        self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
+        self.matrix = self.items.apply_to_matrix()
+        self.player = Player(self.items.start())
+
+    def update_matrix(self) -> None:
+        pass

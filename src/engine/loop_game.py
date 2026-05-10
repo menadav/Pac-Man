@@ -47,11 +47,18 @@ class GameRun(BaseScene):
                 px = x * tile_size
                 py = y * tile_size
                 color = (0, 0, 255)
-                if cell_value & 1: # Norte
+                center_x = px + tile_size // 2
+                center_y = py + tile_size // 2
+                yellow = (255, 255, 0)
+                if cell_value & 16:
+                    pygame.draw.circle(screen, yellow, (center_x, center_y), tile_size // 8)
+                elif cell_value & 32:
+                    pygame.draw.circle(screen, yellow, (center_x, center_y), tile_size // 3)
+                if cell_value & 1:
                     pygame.draw.line(screen, color, (px, py), (px + tile_size, py), 2)
-                if cell_value & 2: # Este
+                if cell_value & 2:
                     pygame.draw.line(screen, color, (px + tile_size, py), (px + tile_size, py + tile_size), 2)
-                if cell_value & 4: # Sur
+                if cell_value & 4:
                     pygame.draw.line(screen, color, (px, py + tile_size), (px + tile_size, py + tile_size), 2)
-                if cell_value & 8: # Oeste
+                if cell_value & 8:
                     pygame.draw.line(screen, color, (px, py), (px, py + tile_size), 2)
