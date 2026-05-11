@@ -26,8 +26,9 @@ class GameRun(BaseScene):
             if event.type == pygame.QUIT:
                 return ("QUIT", self.score)
             if event.type == pygame.KEYDOWN:
-                if event.key == CONTROLS:
+                if event.key in CONTROLS:
                     new_direction = CONTROLS[event.key]
+                    self.game_mannager.player.direction(new_direction)
             if self.game_mannager.status == "WIN":
                 return ("WIN", self.score)
             elif self.game_mannager.status == "END":

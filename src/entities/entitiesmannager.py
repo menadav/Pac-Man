@@ -16,7 +16,7 @@ class EntitiesMannager:
         )
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
         self.matrix = self.items.apply_to_matrix()
-        self.player = Player(self.items.pos_start())
+        self.player = Player(self.items.respawn)
         self.status = "RUNNING"
 
     def next_level(self) -> None:

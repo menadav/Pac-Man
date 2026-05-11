@@ -9,6 +9,7 @@ class Items:
         self._width = len(self.matrix[0])
         self.super_pacgums: List[Tuple[int, int]] = []
         self.pacgums: List[Tuple[int, int]] = []
+        self.respawn = self.pos_start()
         self._start_items()
 
     def _start_items(self) -> None:
@@ -31,7 +32,8 @@ class Items:
             for y in range(len(self.matrix[0])):
                 if self.matrix[x][y] < 15:
                     if not (x, y) in self.super_pacgums:
-                        pos_avaliable.append((x, y))
+                        if not (x, y) == self.respawn:
+                            pos_avaliable.append((x, y))
         random.shuffle(pos_avaliable)
         for x in pos_avaliable:
             if len(self.pacgums) < self.p_quant:
@@ -47,5 +49,26 @@ class Items:
             self.matrix[x][y] += 16
         return self.matrix
 
-    def pos_start(self) -> Tuple(int, int):
-        pass
+    def pos_start(self) -> Tuple[int, int]:
+        col_start = self._height // 2
+        fil_start = self._width // 2
+        pos = [
+                (-1, 0),
+                (1, 0),
+                (0, 1),
+                (0, -1)
+            ]
+        if self.matrix[fil_start][col_start] < 15:
+            return (fil_start, col_start)
+        total = self._height * self._width
+        for i in range(total):
+            for x, y in pos:
+                nx = fil_start
+                ny = col_start
+                fx = nx + x * i
+                fy = ny + y * i
+                if 0 <= fx < self._height and 0 <= fy < self._width:
+                    if self.matrix[fx][fy] < 15:
+                        return (fx, fy)
+        raise ValueError("[Error] Bits Error")
+
