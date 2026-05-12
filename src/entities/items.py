@@ -1,5 +1,5 @@
-import random
 from typing import Tuple, List
+
 
 class Items:
     def __init__(self, pacgums: int, matrix: List[List[int]]) -> None:
@@ -41,8 +41,7 @@ class Items:
             else:
                 break
 
-    def apply_to_matrix(self
-            ) -> List[List[int]]:
+    def apply_to_matrix(self) -> List[List[int]]:
         for x, y in self.super_pacgums:
             self.matrix[x][y] += 32
         for x, y in self.pacgums:
@@ -54,12 +53,6 @@ class Items:
         center_x = self._width // 2
         if self.matrix[center_y][center_x] < 15:
             return (center_y, center_x)
-        pos = [
-                (-1, 0),
-                (1, 0),
-                (0, 1),
-                (0, -1)
-            ]
         max_radius = max(self._height, self._width)
         for r in range(1, max_radius):
             for dy in range(-r, r + 1):
@@ -69,5 +62,4 @@ class Items:
                         if 0 <= ny < self._height and 0 <= nx < self._width:
                             if self.matrix[ny][nx] < 15:
                                 return (nx, ny)
-
         raise ValueError("[Error] No se encontró un pasillo válido en el mapa")

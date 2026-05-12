@@ -24,7 +24,10 @@ class Instructions(BaseScene):
         title_surf = self.font.render("INSTRUCTIONS", True, (255, 255, 0))
         t_scale = (sh * 0.12) / title_surf.get_height()
         title_surf = pygame.transform.scale_by(title_surf, t_scale)
-        screen.blit(title_surf, title_surf.get_rect(center=(center_x, sh * 0.15)))
+        screen.blit(
+            title_surf,
+            title_surf.get_rect(center=(center_x, sh * 0.15))
+            )
         instructions_text = [
             "Use ARROW KEYS to move Pac-Man",
             "Eat all the dots to win",

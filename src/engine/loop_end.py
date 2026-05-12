@@ -5,6 +5,7 @@ from typing import List, Optional
 from src.engine.scene import BaseScene
 from src.parse.models import HighScoreEntry
 
+
 class GameOver(BaseScene):
     def __init__(self, screen: pygame.Surface, path: str) -> None:
         super().__init__(screen)

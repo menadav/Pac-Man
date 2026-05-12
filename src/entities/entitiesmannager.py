@@ -1,14 +1,17 @@
-from typing import List, Tuple
+from typing import Tuple
 from mazegenerator.mazegenerator import MazeGenerator
 from src.parse.models import ParseConfig
 from src.entities.items import Items
 from src.entities.player import Player
 from src.engine.controls import Direction
 
+
 class EntitiesMannager:
     def __init__(self, data: ParseConfig) -> None:
         self.data = data
         self.level_index = 0
+        self.bit_superpcgum = 32
+        self.bit_pcgum = 16
         self.current_level = self.data.levels[self.level_index]
         self.maze_engine = MazeGenerator(
             size=(self.current_level.width, self.current_level.height),
@@ -33,7 +36,7 @@ class EntitiesMannager:
 
     def can_move(
             self,
-            current: Tuple[int , int],
+            current: Tuple[int, int],
             move: Direction
             ) -> bool:
         if move == Direction.NONE:
@@ -54,5 +57,26 @@ class EntitiesMannager:
             self.player.current_direction = self.player.next_direction
         if self.can_move(current_pos, self.player.current_direction):
             self.player.update_zone()
+            pos = self.player.current_zone
+            if self._check_bit(pos, self.bit_superpcgum):
+                self._update_bit(pos, self.bit_superpcgum)
+            elif self._check_bit(pos, self.bit_pcgum):
+                self._update_bit(pos, self.bit_pcgum)
         else:
             self.player.current_direction = Direction.NONE
+
+    def _check_bit(
+            self,
+            pos: Tuple[int, int],
+            bit: int
+            ) -> bool:
+        x, y = pos
+        return (self.matrix[y][x] & bit) != 0
+
+    def _update_bit(self, pos: Tuple[int, int], bit: int) -> None:
+        x, y = pos
+        self.matrix[y][x] &= ~bit
+        if bit == self.bit_pcgum:
+            self.player.pcgum += 1
+        elif bit == self.bit_superpcgum:
+            self.player.super_pcgum += 1

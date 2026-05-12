@@ -20,7 +20,9 @@ class GameMannager:
         info = pygame.display.Info()
         screen_width = info.current_w
         screen_height = info.current_h
-        self.screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode(
+            (screen_width, screen_height), pygame.FULLSCREEN
+            )
         self.scores = "src/highscores/highscores.json"
         self.data = data
         self.menu = Menu(self.screen)
@@ -60,7 +62,7 @@ class GameMannager:
                 self.game.update()
             self.current_scene.draw(self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(2)
         pygame.quit()
 
     def load_score(self, scores: str) -> Optional[List[HighScoreEntry]]:

@@ -1,6 +1,7 @@
 from typing import Tuple
 from src.engine.controls import Direction
 
+
 class Player:
     def __init__(self, start: Tuple[int, int]) -> None:
         self.current_zone = start
