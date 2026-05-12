@@ -9,6 +9,7 @@ from src.engine.dataprocess import GameMannager
     (Instalar Maze como un Paquete)
 - Limitar Altura y anchura del config.json. Por que tiene Recursiva el Maze.
 - Loop_instructions: Hacerlo escala independiente.
+- In-Game HUD (always visible during gameplay).
 - Assets: Pacman
 """
 def main() -> None:
