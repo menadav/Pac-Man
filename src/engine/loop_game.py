@@ -1,6 +1,6 @@
 import pygame
 from typing import List, Optional, Tuple
-from src.engine.controls import CONTROLS
+from src.engine.controls import CONTROLS, Direction
 from src.engine.scene import BaseScene
 from src.parse.models import ParseConfig
 from src.entities.entitiesmannager import EntitiesMannager
@@ -19,6 +19,9 @@ class GameRun(BaseScene):
         self.score = 0
         self.font = pygame.font.Font(None, 100)
 
+    def update(self) -> None:
+        self.game_mannager.update()
+
     def handle_events(
             self, events: List[pygame.event.Event]
             ) -> Optional[Tuple[str, int]]:
@@ -27,8 +30,8 @@ class GameRun(BaseScene):
                 return ("QUIT", self.score)
             if event.type == pygame.KEYDOWN:
                 if event.key in CONTROLS:
-                    new_direction = CONTROLS[event.key]
-                    self.game_mannager.player.direction(new_direction)
+                    new_dir = CONTROLS[event.key]
+                    self.game_mannager.player.direction(new_dir)
             if self.game_mannager.status == "WIN":
                 return ("WIN", self.score)
             elif self.game_mannager.status == "END":
@@ -63,3 +66,12 @@ class GameRun(BaseScene):
                     pygame.draw.line(screen, color, (px, py + tile_size), (px + tile_size, py + tile_size), 2)
                 if cell_value & 8:
                     pygame.draw.line(screen, color, (px, py), (px, py + tile_size), 2)
+        p_x, p_y = self.game_mannager.player.current_zone
+        player_center_x = p_x * tile_size + tile_size // 2
+        player_center_y = p_y * tile_size + tile_size // 2
+        pygame.draw.circle(
+            screen, 
+            (255, 255, 0),
+            (player_center_x, player_center_y), 
+            tile_size // 2 - 2
+        )

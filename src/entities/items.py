@@ -33,11 +33,11 @@ class Items:
                 if self.matrix[x][y] < 15:
                     if not (x, y) in self.super_pacgums:
                         if not (x, y) == self.respawn:
-                            pos_avaliable.append((x, y))
-        random.shuffle(pos_avaliable)
+                            pos_avaliable.append(((x, y), self.matrix[x][y]))
+        pos_avaliable.sort(key=lambda x: x[1])
         for x in pos_avaliable:
             if len(self.pacgums) < self.p_quant:
-                self.pacgums.append(x)
+                self.pacgums.append(x[0])
             else:
                 break
 
@@ -50,25 +50,24 @@ class Items:
         return self.matrix
 
     def pos_start(self) -> Tuple[int, int]:
-        col_start = self._height // 2
-        fil_start = self._width // 2
+        center_y = self._height // 2
+        center_x = self._width // 2
+        if self.matrix[center_y][center_x] < 15:
+            return (center_y, center_x)
         pos = [
                 (-1, 0),
                 (1, 0),
                 (0, 1),
                 (0, -1)
             ]
-        if self.matrix[fil_start][col_start] < 15:
-            return (fil_start, col_start)
-        total = self._height * self._width
-        for i in range(total):
-            for x, y in pos:
-                nx = fil_start
-                ny = col_start
-                fx = nx + x * i
-                fy = ny + y * i
-                if 0 <= fx < self._height and 0 <= fy < self._width:
-                    if self.matrix[fx][fy] < 15:
-                        return (fx, fy)
-        raise ValueError("[Error] Bits Error")
+        max_radius = max(self._height, self._width)
+        for r in range(1, max_radius):
+            for dy in range(-r, r + 1):
+                for dx in range(-r, r + 1):
+                    if abs(dx) == r or abs(dy) == r:
+                        ny, nx = center_y + dy, center_x + dx
+                        if 0 <= ny < self._height and 0 <= nx < self._width:
+                            if self.matrix[ny][nx] < 15:
+                                return (nx, ny)
 
+        raise ValueError("[Error] No se encontró un pasillo válido en el mapa")

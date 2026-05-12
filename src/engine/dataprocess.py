@@ -56,6 +56,8 @@ class GameMannager:
                     self.current_scene = self.end
                 elif scene_signal == "QUIT":
                     self.running = False
+            if self.current_scene == self.game:
+                self.game.update()
             self.current_scene.draw(self.screen)
             pygame.display.flip()
             self.clock.tick(60)

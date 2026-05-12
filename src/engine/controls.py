@@ -1,5 +1,4 @@
 import pygame
-import Enum
 from enum import Enum
 
 class Direction(Enum):
