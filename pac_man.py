@@ -11,6 +11,8 @@ from src.engine.dataprocess import GameMannager
 - Loop_instructions: Hacerlo escala independiente.
 - In-Game HUD (always visible during gameplay).
 - Assets: Pacman
+- Docstrings
+- Flake8, Mypy
 """
 def main() -> None:
     try :
@@ -22,6 +24,7 @@ def main() -> None:
     except ValueError as e:
         print(e)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

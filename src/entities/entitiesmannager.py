@@ -59,7 +59,7 @@ class EntitiesMannager:
         return (cell_vallue & masks[move]) == 0
 
     def update(self) -> None:
-        if self._check_live(self.player.life):
+        if self._check_live(self.player.live):
             self.status = "END"
         current_pos = self.player.current_zone
         if self.can_move(current_pos, self.player.next_direction):
@@ -109,5 +109,3 @@ class EntitiesMannager:
 
     def _update_superpcgum(self) -> None:
         self.score += self.data.points_per_super_pacgum
-
-

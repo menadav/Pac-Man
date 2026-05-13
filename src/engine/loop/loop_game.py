@@ -13,13 +13,15 @@ class GameRun(BaseScene):
             data: ParseConfig
             ) -> None:
         super().__init__(screen)
+        self.options = ["MENU", "CHEAT", "CONTINUE"]
+        self.index = 0
         self.screen = screen
         self.data = data
         self.game_mannager = EntitiesMannager(self.data)
         self.font = pygame.font.Font(None, 100)
 
     def update(self) -> None:
-        if self.game_mannager.status is "RUNNING":
+        if self.game_mannager.status == "RUNNING":
             self.game_mannager.update()
         else:
             pass
@@ -29,16 +31,35 @@ class GameRun(BaseScene):
             ) -> Optional[Tuple[str, int]]:
         for event in events:
             if event.type == pygame.QUIT:
-                return ("QUIT", self.score)
+                return ("QUIT", 0)
             if event.type == pygame.KEYDOWN:
-                if event.key in CONTROLS:
-                    new_dir = CONTROLS[event.key]
-                    self.game_mannager.player.direction(new_dir)
+                if self.game_mannager.status == "RUNNING":
+                    if event.key in CONTROLS:
+                        new_dir = CONTROLS[event.key]
+                        self.game_mannager.player.direction(new_dir)
+                    if event.key == pygame.K_ESCAPE:
+                        self.game_mannager.status = "PAUSE"
+                elif self.game_mannager.status == "PAUSE":
+                    if event.key == pygame.K_UP:
+                        self.index = (self.index - 1) % len(self.options)
+                    elif event.key == pygame.K_DOWN:
+                        self.index = (self.index + 1) % len(self.options)
+                    elif event.key == pygame.K_RETURN:
+                        return self.select_options()
             if self.game_mannager.status == "WIN":
                 return ("WIN", self.game_mannager.score)
             elif self.game_mannager.status == "END":
                 return("END", self.game_mannager.score)
         return None
+
+    def select_options(self) -> str:
+        option = self.options[self.index]
+        if option == "MENU":
+            return ("MENU", 0)
+        if option == "CHEAT":
+            self.game_mannager.player.cheat_mode()
+        if option == "CONTINUE":
+            self.game_mannager.status == "RUNNING"
 
     def draw(self, screen: pygame.Surface):
         screen.fill((0, 0, 0))

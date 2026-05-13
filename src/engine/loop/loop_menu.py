@@ -1,6 +1,5 @@
 import pygame
-from typing import List, Optional,Tuple
-from src.parse.models import HighScoreEntry
+from typing import List, Optional, Tuple
 from src.engine.scene import BaseScene
 
 
@@ -10,7 +9,6 @@ class Menu(BaseScene):
         self.index = 0
         self.options = ["Start", "Highscores", "Instructions", "Exit"]
         self.font = pygame.font.Font(None, 180)
-
 
     def handle_events(
             self,

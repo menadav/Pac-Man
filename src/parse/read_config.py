@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 from src.parse.models import ParseConfig
 
+
 def parse_config(path_av: str) -> ParseConfig:
     try:
         actual_path = Path(path_av)

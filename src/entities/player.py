@@ -7,7 +7,7 @@ class Player(Controls):
     def __init__(self, start: Tuple[int, int], live: int) -> None:
         super().__init__(start)
         self.live = live
-        self.cheat_mode = False
+        self.cheat = False
         self.super_pcgum = 0
         self.pcgum = 0
 
@@ -29,4 +29,4 @@ class Player(Controls):
         self.live += 1
 
     def cheat_mode(self) -> None:
-        self.cheat_mode = not self.cheat_mode
+        self.cheat = not self.cheat
