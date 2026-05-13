@@ -6,11 +6,11 @@ except ImportError:
 import json
 from pathlib import Path
 from typing import Optional, List
-from src.engine.loop_menu import Menu
-from src.engine.loop_highscore import HighScoreScene
-from src.engine.loop_instructions import Instructions
-from src.engine.loop_end import GameOver
-from src.engine.loop_game import GameRun
+from src.engine.loop.loop_menu import Menu
+from src.engine.loop.loop_highscore import HighScoreScene
+from src.engine.loop.loop_instructions import Instructions
+from src.engine.loop.loop_end import GameOver
+from src.engine.loop.loop_game import GameRun
 from src.parse.models import ParseConfig, HighScoreEntry
 
 
@@ -75,4 +75,3 @@ class GameMannager:
                 return [HighScoreEntry(**item) for item in data]
         except (KeyError, TypeError, json.JSONDecodeError):
             return []
-

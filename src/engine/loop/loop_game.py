@@ -1,6 +1,6 @@
 import pygame
 from typing import List, Optional, Tuple
-from src.engine.controls import CONTROLS, Direction
+from src.engine.direction import CONTROLS
 from src.engine.scene import BaseScene
 from src.parse.models import ParseConfig
 from src.entities.entitiesmannager import EntitiesMannager

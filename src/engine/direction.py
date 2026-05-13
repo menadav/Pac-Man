@@ -1,6 +1,7 @@
 import pygame
 from enum import Enum
 
+
 class Direction(Enum):
     UP = "UP"
     DOWN = "DOWN"
@@ -15,4 +16,3 @@ CONTROLS = {
     pygame.K_LEFT: Direction.LEFT, pygame.K_a: Direction.LEFT,
     pygame.K_RIGHT: Direction.RIGHT, pygame.K_d: Direction.RIGHT
 }
-

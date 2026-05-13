@@ -3,6 +3,7 @@ from typing import Optional, List, Tuple
 from src.parse.models import HighScoreEntry
 from src.engine.scene import BaseScene
 
+
 class HighScoreScene(BaseScene):
     def __init__(self, screen: pygame.Surface) -> None:
         super().__init__(screen)
@@ -11,7 +12,7 @@ class HighScoreScene(BaseScene):
         self.font = pygame.font.Font(None, 100)
         self.score_list = []
 
-    def high_load(self, data:Optional[List[HighScoreEntry]]) -> None:
+    def high_load(self, data: Optional[List[HighScoreEntry]]) -> None:
         if not data:
             self.score_list = ["The score is empty"]
             return

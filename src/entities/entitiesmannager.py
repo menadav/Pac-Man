@@ -3,7 +3,7 @@ from mazegenerator.mazegenerator import MazeGenerator
 from src.parse.models import ParseConfig
 from src.entities.items import Items
 from src.entities.player import Player
-from src.engine.controls import Direction
+from src.engine.direction import Direction
 
 
 class EntitiesMannager:

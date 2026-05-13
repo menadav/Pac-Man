@@ -1,20 +1,17 @@
-import Abstractmethod
+from typing import Tuple
 from abc import ABC, abstractmethod
-from src.engine.controls import Direction
+from src.engine.direction import Direction
+from src.entities.entitie import Controls
 
 
-class Ghost(ABC):
+class Ghost(Controls, ABC):
     def __init__(
             self,
             start: Tuple[int, int],
             scatter_target: Tuple[int, int]
             ) -> None:
-        self.current_zone = start
-        self.spawn_point = start
+        super().__init__(start)
         self.scatter_target = scatter_target
-        self.current_direction = Direction.NONE
-        self.next_direction = Direction.NONE
-
 
     @abstractmethod
     def calculate_target(
@@ -23,14 +20,3 @@ class Ghost(ABC):
             player_dir: Direction
             ) -> Tuple[int, int]:
         pass
-
-    def update_zone(self) -> None:
-        x, y = self.current_zone
-        if self.current_direction == Direction.UP:
-            self.current_zone = (x, y - 1)
-        elif self.current_direction == Direction.DOWN:
-            self.current_zone = (x, y + 1)
-        elif self.current_direction == Direction.LEFT:
-            self.current_zone = (x - 1, y)
-        elif self.current_direction == Direction.RIGHT:
-            self.current_zone = (x + 1, y)

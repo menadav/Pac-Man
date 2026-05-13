@@ -1,7 +1,6 @@
 import pygame
 from typing import Optional, List
 from abc import ABC, abstractmethod
-from src.parse.models import ParseConfig
 
 
 class BaseScene(ABC):
