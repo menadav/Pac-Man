@@ -26,6 +26,7 @@ class LevelConfig(BaseModel):
 class ParseConfig(BaseModel):
     file: str = Field(default="highscores.json", alias="highscore_filename")
     seed: int = 42
+    lives: int = 3
     points_per_pacgum: int = 10 
     points_per_super_pacgum: int = 50
     points_per_ghost: int = 200

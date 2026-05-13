@@ -3,10 +3,12 @@ from src.engine.controls import Direction
 
 
 class Player:
-    def __init__(self, start: Tuple[int, int]) -> None:
+    def __init__(self, start: Tuple[int, int], live: int) -> None:
         self.current_zone = start
         self.current_direction = Direction.NONE
         self.next_direction = Direction.NONE
+        self.live = live
+        self.cheat_mode = False
         self.super_pcgum = 0
         self.pcgum = 0
 
@@ -23,3 +25,9 @@ class Player:
             self.current_zone = (x - 1, y)
         elif self.current_direction == Direction.RIGHT:
             self.current_zone = (x + 1, y)
+
+    def upgrade_lives(self) -> None:
+        self.live += 1
+
+    def cheat_mode(self) -> None:
+        self.cheat_mode = not self.cheat_mode
