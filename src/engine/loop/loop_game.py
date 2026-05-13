@@ -16,11 +16,13 @@ class GameRun(BaseScene):
         self.screen = screen
         self.data = data
         self.game_mannager = EntitiesMannager(self.data)
-        self.score = 0
         self.font = pygame.font.Font(None, 100)
 
     def update(self) -> None:
-        self.game_mannager.update()
+        if self.game_mannager.status is "RUNNING":
+            self.game_mannager.update()
+        else:
+            pass
 
     def handle_events(
             self, events: List[pygame.event.Event]
@@ -33,9 +35,9 @@ class GameRun(BaseScene):
                     new_dir = CONTROLS[event.key]
                     self.game_mannager.player.direction(new_dir)
             if self.game_mannager.status == "WIN":
-                return ("WIN", self.score)
+                return ("WIN", self.game_mannager.score)
             elif self.game_mannager.status == "END":
-                return("END", self.score)
+                return("END", self.game_mannager.score)
         return None
 
     def draw(self, screen: pygame.Surface):

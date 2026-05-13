@@ -15,15 +15,8 @@
       "level_id": 1,
       "width": 20,
       "height": 20,
-      "pacgum": 42,
+      "pacgum": 1,
       "level_max_time": 90
-    },
-    {
-      "level_id": 2,
-      "width": 30,
-      "height": 35,
-      "pacgum": 60,
-      "level_max_time": 120
     }
   ]
 }

@@ -26,7 +26,7 @@ class GameMannager:
         self.scores = "src/highscores/highscores.json"
         self.data = data
         self.menu = Menu(self.screen)
-        self.game = GameRun(self.screen, self.data)
+        self.game = None
         self.highscore = HighScoreScene(self.screen)
         self.instructions = Instructions(self.screen)
         self.end = GameOver(self.screen, self.scores)
@@ -45,6 +45,7 @@ class GameMannager:
                 scene_signal = signal[0]
                 score = signal[1]
                 if scene_signal == "GAME":
+                    self.game = GameRun(self.screen, self.data)
                     self.current_scene = self.game
                 elif scene_signal == "HIGHSCORES":
                     self.highscore.high_load(self.load_score(self.scores))
@@ -62,7 +63,7 @@ class GameMannager:
                 self.game.update()
             self.current_scene.draw(self.screen)
             pygame.display.flip()
-            self.clock.tick(2)
+            self.clock.tick(3)
         pygame.quit()
 
     def load_score(self, scores: str) -> Optional[List[HighScoreEntry]]:
