@@ -3,11 +3,11 @@ from mazegenerator.mazegenerator import MazeGenerator
 from src.parse.models import ParseConfig
 from src.entities.items import Items
 from src.entities.player import Player
+from src.entities.ghost_model.ghostmannager import GhostMannager
 from src.engine.direction import Direction
 
-
 class EntitiesMannager:
-    def __init__(self, data: ParseConfig) -> None:
+    def __init__(self, data: ParseConfig, t_size: int) -> None:
         self.data = data
         self.level_index = 0
         self.bit_superpcgum = 32
@@ -19,10 +19,12 @@ class EntitiesMannager:
             perfect=False
         )
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
+        self.t_size = t_size
         self.matrix = self.items.apply_to_matrix()
         self.actual_live = self.data.lives
-        self.player = Player(self.items.respawn, self.actual_live)
+        self.player = Player(self.items.respawn, self.actual_live, t_size)
         self.lvl_items = self.current_level.pacgum + 4
+        self.ghost_mannager = GhostMannager(self.items, t_size)
         self.score = 0
         self.status = "RUNNING"
 
@@ -40,6 +42,7 @@ class EntitiesMannager:
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
         self.matrix = self.items.apply_to_matrix()
         self.player = Player(self.items.respawn, self.actual_live)
+        self.ghost_mannager = GhostMannager(self.items)
 
     def can_move(
             self,
@@ -61,21 +64,29 @@ class EntitiesMannager:
     def update(self) -> None:
         if self._check_live(self.player.live):
             self.status = "END"
-        current_pos = self.player.current_zone
-        if self.can_move(current_pos, self.player.next_direction):
-            self.player.current_direction = self.player.next_direction
-        if self.can_move(current_pos, self.player.current_direction):
-            self.player.update_zone()
-            pos = self.player.current_zone
+            return
+        p = self.player
+        if p.is_centered():
+            pos = p.current_zone
+            if self.can_move(pos, p.next_direction):
+                p.current_direction = p.next_direction
+            if not self.can_move(pos, p.current_direction):
+                p.current_direction = Direction.NONE
             if self._check_bit(pos, self.bit_superpcgum):
                 self._update_bit_score(pos, self.bit_superpcgum)
             elif self._check_bit(pos, self.bit_pcgum):
                 self._update_bit_score(pos, self.bit_pcgum)
+
             if self._check_lvl():
                 self.next_level()
-        else:
-            self.player.current_direction = Direction.NONE
-    
+        p.update_position()
+        self.ghost_mannager.update(
+            p.current_zone,
+            p.current_direction,
+            self.can_move,
+            self.matrix
+        )
+
     def _check_lvl(self) -> bool:
         total_pcgum = self.player.super_pcgum + self.player.pcgum
         if self.lvl_items == total_pcgum:

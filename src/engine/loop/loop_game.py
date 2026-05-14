@@ -17,8 +17,11 @@ class GameRun(BaseScene):
         self.index = 0
         self.screen = screen
         self.data = data
-        self.game_mannager = EntitiesMannager(self.data)
+        lvl = self.data.levels[0]
+        t_size = min(self.screen.get_width() // lvl.width, self.screen.get_height() // lvl.height)
+        self.game_mannager = EntitiesMannager(self.data, t_size)
         self.font = pygame.font.Font(None, 100)
+        
 
     def update(self) -> None:
         if self.game_mannager.status == "RUNNING":
@@ -89,12 +92,28 @@ class GameRun(BaseScene):
                     pygame.draw.line(screen, color, (px, py + tile_size), (px + tile_size, py + tile_size), 2)
                 if cell_value & 8:
                     pygame.draw.line(screen, color, (px, py), (px, py + tile_size), 2)
-        p_x, p_y = self.game_mannager.player.current_zone
-        player_center_x = p_x * tile_size + tile_size // 2
-        player_center_y = p_y * tile_size + tile_size // 2
+        player = self.game_mannager.player
+        player_center_x = int(player.pixel_x + tile_size // 2)
+        player_center_y = int(player.pixel_y + tile_size // 2)
         pygame.draw.circle(
             screen, 
             (255, 255, 0),
             (player_center_x, player_center_y), 
             tile_size // 2 - 2
         )
+        ghost_colors = {
+            "Blinky": (255, 0, 0),
+            "Pinky": (255, 182, 193),
+            "Inky": (0, 255, 255),
+            "Clyde": (255, 165, 0)
+        }
+        for ghost in self.game_mannager.ghost_mannager.ghosts:
+            gx = ghost.pixel_x
+            gy = ghost.pixel_y
+            name = ghost.__class__.__name__
+            color = ghost_colors.get(name, (255, 255, 255))
+            ghost_center = (int(gx + tile_size // 2), int(gy + tile_size // 2))
+            pygame.draw.circle(screen, color, ghost_center, tile_size // 2 - 2)    
+            eye_color = (255, 255, 255)
+            pygame.draw.circle(screen, eye_color, (ghost_center[0] - 4, ghost_center[1] - 2), 2)
+            pygame.draw.circle(screen, eye_color, (ghost_center[0] + 4, ghost_center[1] - 2), 2)

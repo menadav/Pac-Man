@@ -63,7 +63,7 @@ class GameMannager:
                 self.game.update()
             self.current_scene.draw(self.screen)
             pygame.display.flip()
-            self.clock.tick(3)
+            self.clock.tick(60)
         pygame.quit()
 
     def load_score(self, scores: str) -> Optional[List[HighScoreEntry]]:

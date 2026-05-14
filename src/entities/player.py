@@ -4,8 +4,8 @@ from src.entities.entitie import Controls
 
 
 class Player(Controls):
-    def __init__(self, start: Tuple[int, int], live: int) -> None:
-        super().__init__(start)
+    def __init__(self, start: Tuple[int, int], live: int, t_size: int) -> None:
+        super().__init__(start, t_size)
         self.live = live
         self.cheat = False
         self.super_pcgum = 0
@@ -13,17 +13,8 @@ class Player(Controls):
 
     def direction(self, direction: Direction) -> None:
         self.next_direction = direction
-
-    def update_zone(self) -> None:
-        x, y = self.current_zone
-        if self.current_direction == Direction.UP:
-            self.current_zone = (x, y - 1)
-        elif self.current_direction == Direction.DOWN:
-            self.current_zone = (x, y + 1)
-        elif self.current_direction == Direction.LEFT:
-            self.current_zone = (x - 1, y)
-        elif self.current_direction == Direction.RIGHT:
-            self.current_zone = (x + 1, y)
+        if self.current_direction == Direction.NONE:
+            self.current_direction = direction
 
     def upgrade_lives(self) -> None:
         self.live += 1
