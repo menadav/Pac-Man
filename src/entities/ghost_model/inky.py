@@ -12,4 +12,7 @@ class Inky(Ghost):
             player_zone: Tuple[int, int],
             player_dir: Direction
             ) -> Tuple[int, int]:
-        return player_zone
+        if player_dir in [Direction.LEFT, Direction.RIGHT]:
+            return (player_zone[0], player_zone[1] + 2)
+        else:
+            return (player_zone[0] + 2, player_zone[1])

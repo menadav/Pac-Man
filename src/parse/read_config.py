@@ -18,7 +18,7 @@ def parse_config(path_av: str) -> ParseConfig:
             for line in f:
                 line_clean = line.strip()
                 if not line_clean or line_clean.startswith("#"):
-                        continue
+                    continue
                 line_valid.append(line_clean)
         string_json = "".join(line_valid)
         dict_json = json.loads(string_json)
@@ -26,7 +26,6 @@ def parse_config(path_av: str) -> ParseConfig:
     except json.JSONDecodeError:
         raise ValueError("[ERROR] Invalid JSON format")
     except FileNotFoundError:
-         raise ValueError("[ERROR] File not found")
+        raise ValueError("[ERROR] File not found")
     except PermissionError:
-         raise ValueError("[ERROR] Permission errors")
-         
+        raise ValueError("[ERROR] Permission errors")

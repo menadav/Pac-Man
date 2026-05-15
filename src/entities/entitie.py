@@ -11,13 +11,15 @@ class Controls:
         self.tile_size = tile_size
         self.pixel_x = float(start[0] * self.tile_size)
         self.pixel_y = float(start[1] * self.tile_size)
-        self.speed = 2.0
+        self.speed = 3
 
     def is_centered(self) -> bool:
-        return self.pixel_x % self.tile_size == 0 and self.pixel_y % self.tile_size == 0
+        return (
+            self.pixel_x % self.tile_size == 0
+            and self.pixel_y % self.tile_size == 0
+        )
 
     def update_position(self) -> None:
-        # Movimiento normal
         if self.current_direction == Direction.UP:
             self.pixel_y -= self.speed
         elif self.current_direction == Direction.DOWN:
@@ -27,10 +29,11 @@ class Controls:
         elif self.current_direction == Direction.RIGHT:
             self.pixel_x += self.speed
         if self.current_direction in [Direction.LEFT, Direction.RIGHT]:
-            self.pixel_y = float(round(self.pixel_y / self.tile_size) * self.tile_size)
+            self.pixel_y = float(
+                round(self.pixel_y / self.tile_size) * self.tile_size)
         elif self.current_direction in [Direction.UP, Direction.DOWN]:
-            self.pixel_x = float(round(self.pixel_x / self.tile_size) * self.tile_size)
-
+            self.pixel_x = float(
+                round(self.pixel_x / self.tile_size) * self.tile_size)
         self._check_zone_boundary()
 
     def _check_zone_boundary(self) -> None:

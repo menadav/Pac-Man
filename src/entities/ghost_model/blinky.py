@@ -6,8 +6,6 @@ from src.entities.ghost_model.ghost import Ghost
 class Blinky(Ghost):
     def __init__(self, start: Tuple[int, int], scatter_target, tile_size) -> None:
         super().__init__(start, scatter_target, tile_size)
-        self.mode = "CHASE"
-
 
     def calculate_target(
             self,

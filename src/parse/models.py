@@ -23,6 +23,7 @@ class LevelConfig(BaseModel):
             return security_default
         return v
 
+
 class ParseConfig(BaseModel):
     file: str = Field(default="highscores.json", alias="highscore_filename")
     seed: int = 42
@@ -38,7 +39,7 @@ class ParseConfig(BaseModel):
         ids_regist = set()
         for levels in v:
             if levels.level_id in ids_regist:
-                new_id  = max(ids_regist) + 1 if ids_regist else 1
+                new_id = max(ids_regist) + 1 if ids_regist else 1
                 print(
                     f"[CONFIG WARNING] ID {levels.level_id} is repeated."
                     f" Fixed to: {new_id}"

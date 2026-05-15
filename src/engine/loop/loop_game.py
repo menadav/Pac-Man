@@ -18,10 +18,14 @@ class GameRun(BaseScene):
         self.screen = screen
         self.data = data
         lvl = self.data.levels[0]
-        t_size = min(self.screen.get_width() // lvl.width, self.screen.get_height() // lvl.height)
+        t_size = min(
+            self.screen.get_width()
+            // lvl.width, self.screen.get_height() // lvl.height
+            )
         self.game_mannager = EntitiesMannager(self.data, t_size)
         self.font = pygame.font.Font(None, 100)
-        
+        self.WATCH = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.WATCH, 1000)
 
     def update(self) -> None:
         if self.game_mannager.status == "RUNNING":
@@ -35,8 +39,13 @@ class GameRun(BaseScene):
         for event in events:
             if event.type == pygame.QUIT:
                 return ("QUIT", 0)
+            if event.type == self.WATCH:
+                self.game_mannager.update_level_time()
             if event.type == pygame.KEYDOWN:
                 if self.game_mannager.status == "RUNNING":
+                    if self.game_mannager.player.cheat:
+                        if event.key == pygame.K_SPACE:
+                            self.game_mannager.next_level()
                     if event.key in CONTROLS:
                         new_dir = CONTROLS[event.key]
                         self.game_mannager.player.direction(new_dir)
@@ -52,17 +61,18 @@ class GameRun(BaseScene):
             if self.game_mannager.status == "WIN":
                 return ("WIN", self.game_mannager.score)
             elif self.game_mannager.status == "END":
-                return("END", self.game_mannager.score)
+                return ("END", self.game_mannager.score)
         return None
 
-    def select_options(self) -> str:
+    def select_options(self) -> Optional[Tuple[str, int]]:
         option = self.options[self.index]
         if option == "MENU":
             return ("MENU", 0)
         if option == "CHEAT":
             self.game_mannager.player.cheat_mode()
         if option == "CONTINUE":
-            self.game_mannager.status == "RUNNING"
+            self.game_mannager.status = "RUNNING"
+        return None
 
     def draw(self, screen: pygame.Surface):
         screen.fill((0, 0, 0))
@@ -95,17 +105,10 @@ class GameRun(BaseScene):
         player = self.game_mannager.player
         player_center_x = int(player.pixel_x + tile_size // 2)
         player_center_y = int(player.pixel_y + tile_size // 2)
-        pygame.draw.circle(
-            screen, 
-            (255, 255, 0),
-            (player_center_x, player_center_y), 
-            tile_size // 2 - 2
-        )
+        pygame.draw.circle(screen, (255, 255, 0), (player_center_x, player_center_y), tile_size // 2 - 2)
         ghost_colors = {
-            "Blinky": (255, 0, 0),
-            "Pinky": (255, 182, 193),
-            "Inky": (0, 255, 255),
-            "Clyde": (255, 165, 0)
+            "Blinky": (255, 0, 0), "Pinky": (255, 182, 193),
+            "Inky": (0, 255, 255), "Clyde": (255, 165, 0)
         }
         for ghost in self.game_mannager.ghost_mannager.ghosts:
             gx = ghost.pixel_x
@@ -117,3 +120,25 @@ class GameRun(BaseScene):
             eye_color = (255, 255, 255)
             pygame.draw.circle(screen, eye_color, (ghost_center[0] - 4, ghost_center[1] - 2), 2)
             pygame.draw.circle(screen, eye_color, (ghost_center[0] + 4, ghost_center[1] - 2), 2)
+        if self.game_mannager.status == "PAUSE":
+            overlay = pygame.Surface((screen.get_width(), screen.get_height()), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 180))
+            screen.blit(overlay, (0, 0))
+            title_text = self.font.render("PAUSE", True, (255, 255, 255))
+            title_rect = title_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 4))
+            screen.blit(title_text, title_rect)
+            start_y = screen.get_height() // 2
+            spacing = 90
+            for i, option in enumerate(self.options):
+                if i == self.index:
+                    text_color = (255, 255, 0)
+                else:
+                    text_color = (150, 150, 150)
+                if option == "CHEAT" and getattr(player, 'cheat', False):
+                    text_color = (0, 255, 100) if i != self.index else (0, 255, 255)
+                display_text = option
+                if option == "CHEAT" and getattr(player, 'cheat', False):
+                    display_text = "CHEAT: ACTIVE"
+                option_surf = self.font.render(display_text, True, text_color)
+                option_rect = option_surf.get_rect(center=(screen.get_width() // 2, start_y + i * spacing))
+                screen.blit(option_surf, option_rect)

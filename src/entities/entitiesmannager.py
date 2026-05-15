@@ -6,6 +6,7 @@ from src.entities.player import Player
 from src.entities.ghost_model.ghostmannager import GhostMannager
 from src.engine.direction import Direction
 
+
 class EntitiesMannager:
     def __init__(self, data: ParseConfig, t_size: int) -> None:
         self.data = data
@@ -21,10 +22,10 @@ class EntitiesMannager:
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
         self.t_size = t_size
         self.matrix = self.items.apply_to_matrix()
-        self.actual_live = self.data.lives
-        self.player = Player(self.items.respawn, self.actual_live, t_size)
+        self.player = Player(self.items.respawn, self.data.lives, self.t_size)
         self.lvl_items = self.current_level.pacgum + 4
         self.ghost_mannager = GhostMannager(self.items, t_size)
+        self.level_time = self.current_level.level_max_time
         self.score = 0
         self.status = "RUNNING"
 
@@ -33,6 +34,7 @@ class EntitiesMannager:
         if self.level_index == len(self.data.levels):
             self.status = "WIN"
             return
+        remaining_lives = self.player.live
         self.current_level = self.data.levels[self.level_index]
         self.lvl_items = self.current_level.pacgum + 4
         self.maze_engine = MazeGenerator(
@@ -41,8 +43,16 @@ class EntitiesMannager:
         )
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
         self.matrix = self.items.apply_to_matrix()
-        self.player = Player(self.items.respawn, self.actual_live)
-        self.ghost_mannager = GhostMannager(self.items)
+        self.player = Player(self.items.respawn, remaining_lives, self.t_size)
+        self.ghost_mannager = GhostMannager(self.items, self.t_size)
+        self.level_time = self.current_level.level_max_time
+
+    def update_level_time(self) -> None:
+        if self.status == "RUNNING":
+            self.level_time -= 1
+            if self.level_time <= 0:
+                self.level_time = 0
+                self.status = "END"
 
     def can_move(
             self,
@@ -62,40 +72,50 @@ class EntitiesMannager:
         return (cell_vallue & masks[move]) == 0
 
     def update(self) -> None:
-        if self._check_live(self.player.live):
-            self.status = "END"
-            return
         p = self.player
-        if p.is_centered():
-            pos = p.current_zone
-            if self.can_move(pos, p.next_direction):
-                p.current_direction = p.next_direction
-            if not self.can_move(pos, p.current_direction):
-                p.current_direction = Direction.NONE
-            if self._check_bit(pos, self.bit_superpcgum):
-                self._update_bit_score(pos, self.bit_superpcgum)
-            elif self._check_bit(pos, self.bit_pcgum):
-                self._update_bit_score(pos, self.bit_pcgum)
+        check = 2 if p.cheat else 1
+        for _ in range(check):
+            if p.is_centered():
+                pos = p.current_zone
+                if self.can_move(pos, p.next_direction):
+                    p.current_direction = p.next_direction
+                if not self.can_move(pos, p.current_direction):
+                    p.current_direction = Direction.NONE
+                if self._check_bit(pos, self.bit_superpcgum):
+                    self._update_bit_score(pos, self.bit_superpcgum)
+                elif self._check_bit(pos, self.bit_pcgum):
+                    self._update_bit_score(pos, self.bit_pcgum)
+                if self._check_lvl():
+                    self.next_level()
+                    return
 
-            if self._check_lvl():
-                self.next_level()
-        p.update_position()
+            p.update_position()
         self.ghost_mannager.update(
             p.current_zone,
             p.current_direction,
             self.can_move,
-            self.matrix
+            self.level_time
         )
+        if not self.player.cheat:
+            self._check_collision()
+
+    def _check_collision(self) -> bool:
+        pos_ghost = self.ghost_mannager.get_ghost_positions()
+        if self.player.current_zone in pos_ghost:
+            self.player.live -= 1
+            if self.player.live > 0:
+                self.player.respawn_player()
+                self.ghost_mannager.respawn_ghost()
+            else:
+                self.status = "END"
+            return True
+        return False
 
     def _check_lvl(self) -> bool:
         total_pcgum = self.player.super_pcgum + self.player.pcgum
         if self.lvl_items == total_pcgum:
             return True
         return False
-
-    def _check_live(self, live: int) -> None:
-        if live < 0:
-            self.game_mannager.status = "END"
 
     def _check_bit(
             self,
@@ -120,3 +140,11 @@ class EntitiesMannager:
 
     def _update_superpcgum(self) -> None:
         self.score += self.data.points_per_super_pacgum
+        self._ghost_superpcgum()
+
+    def _ghost_superpcgum(self) -> None:
+        time_escape = self.level_time - 5
+        if time_escape < 0:
+            self.ghost_mannager.time_escape = 0
+        else:
+            self.ghost_mannager.time_escape = time_escape

@@ -19,5 +19,10 @@ class Player(Controls):
     def upgrade_lives(self) -> None:
         self.live += 1
 
+    def respawn_player(self) -> None:
+        self.current_zone = self.respawn
+        self.pixel_x = self.respawn[0] * self.tile_size
+        self.pixel_y = self.respawn[1] * self.tile_size
+
     def cheat_mode(self) -> None:
         self.cheat = not self.cheat

@@ -12,6 +12,9 @@ class Clyde(Ghost):
             player_zone: Tuple[int, int],
             player_dir: Direction
             ) -> Tuple[int, int]:
-        
-        return player_zone
-
+        dist = ((self.current_zone[0] - player_zone[0])**2 +
+                (self.current_zone[1] - player_zone[1])**2)**0.5
+        if dist > 8:
+            return player_zone
+        else:
+            return self.scatter_target
