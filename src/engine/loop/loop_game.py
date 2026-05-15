@@ -40,12 +40,17 @@ class GameRun(BaseScene):
             if event.type == pygame.QUIT:
                 return ("QUIT", 0)
             if event.type == self.WATCH:
-                self.game_mannager.update_level_time()
+                if self.game_mannager.status == "RUNNING":
+                    self.game_mannager.update_level_time()
             if event.type == pygame.KEYDOWN:
                 if self.game_mannager.status == "RUNNING":
                     if self.game_mannager.player.cheat:
                         if event.key == pygame.K_SPACE:
                             self.game_mannager.next_level()
+                        elif event.key == pygame.K_PLUS:
+                            self.game_mannager.player.live += 1
+                        elif event.key == pygame.K_MINUS:
+                            self.game_mannager.player.live -= 1
                     if event.key in CONTROLS:
                         new_dir = CONTROLS[event.key]
                         self.game_mannager.player.direction(new_dir)

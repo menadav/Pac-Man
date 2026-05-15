@@ -25,7 +25,7 @@ class GhostMannager:
             if self.time_escape < actual_time:
                 ghost.mode = "ESCAPE"
             else:
-                self.mode = "CHASE"
+                ghost.mode = "CHASE"
             ghost.update_ghost(player_zone, player_dir, can_move_func)
 
     def get_ghost_positions(self) -> List[Tuple[int, int]]:

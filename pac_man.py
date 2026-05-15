@@ -8,9 +8,15 @@ from src.engine.dataprocess import GameMannager
     -Pygame, Pydantic, Flake8, Mypy.  Y src/map/mazegenerator-00001-py3-none-any
     (Instalar Maze como un Paquete)
 - Limitar Altura y anchura del config.json. Por que tiene Recursiva el Maze.
-- Loop_instructions: Hacerlo escala independiente.
+- Loop_instructions: Anadir nuevos comandos explicar Cheat mode.
+- Loop_end: Hacerlo escala independiente
 - In-Game HUD (always visible during gameplay).
-- Assets: Pacman
+    - self.game_mannager.level_time
+    - self.game_mannager.player.lives
+- loop_game -> def draw:
+        Modificarlo todo
+     Assets: Pacman
+        Class Ghost -> self.mode == "escape" (Fantasmas en azul).
 - Docstrings
 - Flake8, Mypy
 """
