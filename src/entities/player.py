@@ -8,6 +8,7 @@ class Player(Controls):
         super().__init__(start, t_size)
         self.live = live
         self.cheat = False
+        self.super = False
         self.super_pcgum = 0
         self.pcgum = 0
 
@@ -26,3 +27,9 @@ class Player(Controls):
 
     def cheat_mode(self) -> None:
         self.cheat = not self.cheat
+
+    def update_super_t(self) -> None:
+        self.super = True
+
+    def update_super_f(self) -> None:
+        self.super = False

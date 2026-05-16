@@ -26,6 +26,7 @@ class EntitiesMannager:
         self.lvl_items = self.current_level.pacgum + 4
         self.ghost_mannager = GhostMannager(self.items, t_size)
         self.level_time = self.current_level.level_max_time
+        self.time_escape = self.level_time + 1
         self.score = 0
         self.status = "RUNNING"
 
@@ -46,6 +47,7 @@ class EntitiesMannager:
         self.player = Player(self.items.respawn, remaining_lives, self.t_size)
         self.ghost_mannager = GhostMannager(self.items, self.t_size)
         self.level_time = self.current_level.level_max_time
+        self.time_escape = self.level_time + 1
 
     def update_level_time(self) -> None:
         if self.status == "RUNNING":
@@ -88,28 +90,34 @@ class EntitiesMannager:
                 if self._check_lvl():
                     self.next_level()
                     return
-
             p.update_position()
-        self.ghost_mannager.update(
-            p.current_zone,
-            p.current_direction,
-            self.can_move,
-            self.level_time
-        )
+        self._check_time_super()
+        for ghost in self.ghost_mannager.ghosts:
+            speed = 1 if ghost.mode == "ESCAPE" else 2
+            for _ in range(speed):
+                self.ghost_mannager.update(
+                    p.current_zone,
+                    p.current_direction,
+                    self.can_move,
+                    self.level_time,
+                    ghost
+                )
         if not self.player.cheat:
             self._check_collision()
 
-    def _check_collision(self) -> bool:
-        pos_ghost = self.ghost_mannager.get_ghost_positions()
-        if self.player.current_zone in pos_ghost:
-            self.player.live -= 1
-            if self.player.live > 0:
-                self.player.respawn_player()
-                self.ghost_mannager.respawn_ghost()
+    def _check_collision(self) -> None:
+        pos_ghosts = self.ghost_mannager.get_ghost_positions()
+        if self.player.current_zone in pos_ghosts:
+            if self.player.super and self.ghost_mannager.check_status(self.player.current_zone):
+                self.ghost_mannager.respawn_ghost(self.player.current_zone)
+                self.score += self.data.points_per_ghost
             else:
-                self.status = "END"
-            return True
-        return False
+                self.player.live -= 1
+                if self.player.live > 0:
+                    self.player.respawn_player()
+                    self.ghost_mannager.respawn_ghost()
+                else:
+                    self.status = "END"
 
     def _check_lvl(self) -> bool:
         total_pcgum = self.player.super_pcgum + self.player.pcgum
@@ -140,11 +148,17 @@ class EntitiesMannager:
 
     def _update_superpcgum(self) -> None:
         self.score += self.data.points_per_super_pacgum
+        self.player.update_super_t()
         self._ghost_superpcgum()
 
+    def _check_time_super(self) -> None:
+        if self.time_escape > self.level_time:
+            self.player.update_super_f()
+
     def _ghost_superpcgum(self) -> None:
-        time_escape = self.level_time - 5
-        if time_escape < 0:
+        self.ghost_mannager.ghost_escape()
+        self.time_escape = self.level_time - 8
+        if self.time_escape < 0:
             self.ghost_mannager.time_escape = 0
         else:
-            self.ghost_mannager.time_escape = time_escape
+            self.ghost_mannager.time_escape = self.time_escape

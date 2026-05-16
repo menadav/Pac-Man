@@ -14,7 +14,7 @@ class Ghost(Controls, ABC):
         super().__init__(start, tile_size)
         self.scatter_target = scatter_target
         self.mode = "CHASE"
-        self.speed = 2
+        self.speed = 1
 
     @abstractmethod
     def calculate_target(
@@ -29,11 +29,13 @@ class Ghost(Controls, ABC):
             target = self.calculate_target(player_zone, player_dir)
         else:
             target = self.scatter_target
-        if self.pixel_x % self.tile_size == 0 \
-                and self.pixel_y % self.tile_size == 0:
-            self.current_direction = self._ai_decide_direction(
-                target, can_move_func
-                )
+        if (self.pixel_x % self.tile_size == 0 and self.pixel_y % self.tile_size == 0) \
+                or self.current_direction == Direction.NONE:
+            new_dir = self._ai_decide_direction(target, can_move_func)
+            if self.current_direction == Direction.NONE and not can_move_func(self.current_zone, new_dir):
+                self.current_direction = Direction.NONE
+            else:
+                self.current_direction = new_dir
         self.update_position()
 
     def _ai_decide_direction(
@@ -53,15 +55,18 @@ class Ghost(Controls, ABC):
             Direction.LEFT: Direction.RIGHT, Direction.RIGHT: Direction.LEFT,
             Direction.NONE: Direction.NONE
         }
-        possible_directions = [d for d in directions if can_move_func(self.current_zone, d)]
-        if not possible_directions:
+        possibl_direction = [d for d in directions if can_move_func(self.current_zone, d)]
+        if not possibl_direction:
             return Direction.NONE
-        best_direction = Direction.NONE
-        min_distance = float('inf')
-        forward_directions = [
-            d for d in possible_directions
-            if d != opposite[self.current_direction]
+        if self.current_direction == Direction.NONE:
+            forward_directions = possibl_direction
+        else:
+            forward_directions = [
+                d for d in possibl_direction
+                if d != opposite[self.current_direction]
             ]
+        best_direction = forward_directions[0] if forward_directions else possibl_direction[0]
+        min_distance = float('inf')
         if forward_directions:
             for d in forward_directions:
                 dx, dy = move_map[d]
@@ -74,5 +79,4 @@ class Ghost(Controls, ABC):
                     best_direction = d
         else:
             best_direction = opposite[self.current_direction]
-
         return best_direction

@@ -20,13 +20,10 @@ class GhostMannager:
         self.time_escape = float('inf')
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
-    def update(self, player_zone, player_dir, can_move_func, actual_time):
-        for ghost in self.ghosts:
-            if self.time_escape < actual_time:
-                ghost.mode = "ESCAPE"
-            else:
-                ghost.mode = "CHASE"
-            ghost.update_ghost(player_zone, player_dir, can_move_func)
+    def update(self, player_zone, player_dir, can_move_func, actual_time, ghost):
+        if self.time_escape > actual_time:
+            ghost.mode = "CHASE"
+        ghost.update_ghost(player_zone, player_dir, can_move_func)
 
     def get_ghost_positions(self) -> List[Tuple[int, int]]:
         pos: List[int, int] = []
@@ -34,7 +31,7 @@ class GhostMannager:
             pos.append(ghost.current_zone)
         return pos
     
-    def respawn_ghost(self) -> None:
+    def respawn_ghost(self, pos: tuple[int, int] | None = None) -> None:
         initial_positions = {
             self.pinky: (1, 0),
             self.blinky: (self.w - 2, 0),
@@ -42,8 +39,21 @@ class GhostMannager:
             self.inky: (self.w - 2, self.h - 1)
         }
         for ghost, start_zone in initial_positions.items():
-            ghost.current_zone = start_zone
-            ghost.pixel_x = start_zone[0] * ghost.tile_size
-            ghost.pixel_y = start_zone[1] * ghost.tile_size
+            if pos is None or ghost.current_zone == pos:
+                ghost.current_zone = start_zone
+                ghost.pixel_x = start_zone[0] * ghost.tile_size
+                ghost.pixel_y = start_zone[1] * ghost.tile_size
+                ghost.current_direction = Direction.NONE
+                ghost.mode = "CHASE"
+
+    def check_status(self, pos: tuple[int, int]) -> bool:
+        for ghost in self.ghosts:
+            if ghost.current_zone == pos and ghost.mode == "ESCAPE":
+                return True
+        return False
+                
+    def ghost_escape(self) -> None:
+        for ghost in self.ghosts:
+            ghost.speed = 1
+            ghost.mode = "ESCAPE"
             ghost.current_direction = Direction.NONE
-            ghost.mode = "CHASE"
