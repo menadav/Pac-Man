@@ -17,12 +17,7 @@ class GameRun(BaseScene):
         self.index = 0
         self.screen = screen
         self.data = data
-        lvl = self.data.levels[0]
-        t_size = min(
-            self.screen.get_width()
-            // lvl.width, self.screen.get_height() // lvl.height
-            )
-        self.game_mannager = EntitiesMannager(self.data, t_size)
+        self.game_mannager = EntitiesMannager(self.data, self.screen)
         self.font = pygame.font.Font(None, 100)
         self.WATCH = pygame.USEREVENT + 1
         pygame.time.set_timer(self.WATCH, 1000)

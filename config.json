@@ -11,9 +11,30 @@
   "levels": [
     {
       "level_id": 1,
+      "width": 30,
+      "height": 30,
+      "pacgum": 40,
+      "level_max_time": 90
+    },
+    {
+      "level_id": 1,
       "width": 20,
       "height": 20,
-      "pacgum": 1,
+      "pacgum": 40,
+      "level_max_time": 90
+    },
+    {
+      "level_id": 1,
+      "width": 15,
+      "height": 15,
+      "pacgum": 40,
+      "level_max_time": 90
+    },
+    {
+      "level_id": 1,
+      "width": 23,
+      "height": 23,
+      "pacgum": 40,
       "level_max_time": 90
     }
   ]

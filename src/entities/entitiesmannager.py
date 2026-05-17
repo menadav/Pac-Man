@@ -1,4 +1,5 @@
 from typing import Tuple
+import pygame
 from mazegenerator.mazegenerator import MazeGenerator
 from src.parse.models import ParseConfig
 from src.entities.items import Items
@@ -8,8 +9,9 @@ from src.engine.direction import Direction
 
 
 class EntitiesMannager:
-    def __init__(self, data: ParseConfig, t_size: int) -> None:
+    def __init__(self, data: ParseConfig, screen: pygame.Surface) -> None:
         self.data = data
+        self.screen = screen
         self.level_index = 0
         self.bit_superpcgum = 32
         self.bit_pcgum = 16
@@ -20,23 +22,31 @@ class EntitiesMannager:
             perfect=False
         )
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
-        self.t_size = t_size
+        self.t_size = min(
+            self.screen.get_width() // self.current_level.width,
+            self.screen.get_height() // self.current_level.height
+        )
         self.matrix = self.items.apply_to_matrix()
         self.player = Player(self.items.respawn, self.data.lives, self.t_size)
         self.lvl_items = self.current_level.pacgum + 4
-        self.ghost_mannager = GhostMannager(self.items, t_size)
+        self.ghost_mannager = GhostMannager(self.items, self.t_size)
         self.level_time = self.current_level.level_max_time
         self.time_escape = self.level_time + 1
         self.score = 0
         self.status = "RUNNING"
 
     def next_level(self) -> None:
+
         self.level_index += 1
         if self.level_index == len(self.data.levels):
             self.status = "WIN"
             return
         remaining_lives = self.player.live
         self.current_level = self.data.levels[self.level_index]
+        self.t_size = min(
+            self.screen.get_width() // self.current_level.width,
+            self.screen.get_height() // self.current_level.height
+        )
         self.lvl_items = self.current_level.pacgum + 4
         self.maze_engine = MazeGenerator(
             size=(self.current_level.width, self.current_level.height),
@@ -44,7 +54,11 @@ class EntitiesMannager:
         )
         self.items = Items(self.current_level.pacgum, self.maze_engine.maze)
         self.matrix = self.items.apply_to_matrix()
-        self.player = Player(self.items.respawn, remaining_lives, self.t_size)
+        if self.player.cheat:
+            self.player = Player(self.items.respawn, remaining_lives, self.t_size)
+            self.player.cheat = True
+        else:
+            self.player = Player(self.items.respawn, remaining_lives, self.t_size)
         self.ghost_mannager = GhostMannager(self.items, self.t_size)
         self.level_time = self.current_level.level_max_time
         self.time_escape = self.level_time + 1
