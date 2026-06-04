@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Zizicrott",
+        "score": 700
+    },
+    {
+        "name": "Ziziprout",
+        "score": 400
+    },
+    {
+        "name": "ss",
+        "score": 130
+    }
+]

@@ -1,0 +1,84 @@
+{
+  "# Configuracion global": "",
+  "highscore_filename": "highscores.json",
+  "seed": 42,
+  "lives": 3,
+
+  "# Puntuacion": "",
+  "points_per_pacgum": 10,
+  "points_per_super_pacgum": 50,
+  "points_per_ghost": 200,
+
+  "# Niveles": "",
+  "# 'pacgum' = tope; 0 (o un valor grande) rellena todos los pasillos.": "",
+  "# 'width' y 'height' estan limitados a [8, 40] (generador recursivo).": "",
+  "# Tiempo recomendado (s) ~= width * height * 0.6 para limpiar todo.": "",
+  "levels": [
+    {
+      "level_id": 1,
+      "width": 19,
+      "pacgum": 0,
+      "level_max_time": 150
+    },
+    {
+      "level_id": 2,
+      "level_max_time": 200
+    },
+    {
+      "level_id": 3,
+      "width": 27,
+      "height": 27,
+      "pacgum": 0,
+      "level_max_time": 300
+    },
+    {
+      "level_id": 4,
+      "width": 33,
+      "height": 33,
+      "pacgum": 0,
+      "level_max_time": 330
+    },
+    {
+      "level_id": 5,
+      "width": 37,
+      "height": 37,
+      "pacgum": 0,
+      "level_max_time": 370
+    },
+    {
+      "level_id": 6,
+      "width": 40,
+      "height": 40,
+      "pacgum": 0,
+      "level_max_time": 420
+    },
+    {
+      "level_id": 7,
+      "width": 40,
+      "height": 40,
+      "pacgum": 0,
+      "level_max_time": 400
+    },
+    {
+      "level_id": 8,
+      "width": 40,
+      "height": 40,
+      "pacgum": 0,
+      "level_max_time": 380
+    },
+    {
+      "level_id": 9,
+      "width": 40,
+      "height": 40,
+      "pacgum": 0,
+      "level_max_time": 360
+    },
+    {
+      "level_id": 10,
+      "width": 40,
+      "height": 40,
+      "pacgum": 0,
+      "level_max_time": 340
+    }
+  ]
+}

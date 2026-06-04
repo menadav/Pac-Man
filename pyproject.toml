@@ -1,0 +1,20 @@
+[project]
+name = "pac-man"
+version = "0.1.0"
+description = "Pac-Man Game repository"
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic",
+    "pygame",
+    "flake8",
+    "mypy",
+]
+[tool.uv.workspace]
+members = ["./src/map/mazegenerator-00001-py3-none-any/", "."]
+[tool.mypy]
+explicit_package_bases = true
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true
+disallow_untyped_defs = true
+check_untyped_defs = true
