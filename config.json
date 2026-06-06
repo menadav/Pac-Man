@@ -4,21 +4,19 @@
   "seed": 42,
   "lives": 3,
 
-  "# Puntuacion": "",
+  "# Points": "",
   "points_per_pacgum": 10,
   "points_per_super_pacgum": 50,
   "points_per_ghost": 200,
 
-  "# Niveles": "",
-  "# 'pacgum' = tope; 0 (o un valor grande) rellena todos los pasillos.": "",
-  "# 'width' y 'height' estan limitados a [8, 40] (generador recursivo).": "",
-  "# Tiempo recomendado (s) ~= width * height * 0.6 para limpiar todo.": "",
   "levels": [
     {
       "level_id": 1,
-      "width": 19,
+      "width": 15,
+      "height": 15,
       "pacgum": 0,
-      "level_max_time": 150
+      "level_max_time": 120
+                        
     },
     {
       "level_id": 2,

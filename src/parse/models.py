@@ -51,12 +51,18 @@ class LevelConfig(BaseModel):
     @classmethod
     def clamp_time(cls, v: int, info: Any) -> int:
         """Guarantee a valid level time limit or fallback to default."""
-        if v < 1:
+        if v < 20:
             security_default = int(cls.model_fields[info.field_name].default)
             print(
                 f"[CONFIG WARNING] {info.field_name}. Using default: {security_default}"
             )
             return security_default
+        if v > 99999999999:
+            security_default = int(cls.model_fields[info.field_name].default)
+            print(
+                f"[CONFIG WARNING] {info.field_name}. Using default: {security_default}"
+            )
+            return 99999999999
         return v
 
 
@@ -77,6 +83,9 @@ class ParseConfig(BaseModel):
         if v < 1:
             print(f"[CONFIG WARNING] lives={v} is invalid. Using default: 3")
             return 3
+        if v > 9:
+            print(f"[CONFIG WARNING] lives={v} is too high. Using default: 9")
+            return 9
         return v
 
     @field_validator("levels")
@@ -105,6 +114,13 @@ class ParseConfig(BaseModel):
     def clamp_points(cls, v: int, info: Any) -> int:
         """Prevent negative scoring or seeding values across configuration parameters."""
         if v < 0:
+            security_default = int(cls.model_fields[info.field_name].default)
+            print(
+                f"[CONFIG WARNING] {info.field_name} cannot be negative "
+                f"({v}). Using default: {security_default}"
+            )
+            return security_default
+        if v > 300:
             security_default = int(cls.model_fields[info.field_name].default)
             print(
                 f"[CONFIG WARNING] {info.field_name} cannot be negative "

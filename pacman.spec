@@ -1,16 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""Spec de PyInstaller. Build: ``pyinstaller pacman.spec``.
-
-Produce un ejecutable autonomo en ``dist/`` listo para subir a itch.io
-(zipear la carpeta) o a un depósito de Steam.
-"""
 
 from PyInstaller.utils.hooks import collect_submodules, collect_data_files
 
 block_cipher = None
 
-# Incluye todos los submodulos y datos del paquete A-Maze-ing para que
-# el generador recursivo funcione dentro del bundle.
 hidden_imports = collect_submodules("mazegenerator") + [
     "pygame",
     "pydantic",
