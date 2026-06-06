@@ -1,8 +1,7 @@
 # 👾 Pac-Man
 
-![PACMAN](assets/pacman.png)
-
 > A modern Python remake of the classic arcade game — mazes, ghosts, and glory.
+![PACMAN](assets/pacman.png)
 
 Built with `pygame` and a clean OOP architecture. Navigate procedurally generated mazes, eat pacgums, dodge four ghosts, and chase the top-10 highscore.
 
